@@ -5,7 +5,7 @@ This project contains an implementation of a flighpath for a simulated ANAFI dro
 ## Prerequisites
 
 * [Parrot Sphinx](https://developer.parrot.com/docs/sphinx/)
-* [Python 3.8.10](https://www.python.org/downloads/)
+* [Python 3.8.10](https://www.python.org/downloads/) ?
 * [Pip](https://pip.pypa.io/en/stable/cli/pip_download/)
 
 ## Installation
