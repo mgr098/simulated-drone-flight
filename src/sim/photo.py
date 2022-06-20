@@ -66,30 +66,14 @@ def fly(drone):
         drone(photo_progress(result="photo_saved", _policy="wait"))
 
         drone(take_photo(cam_id=0)).wait()
+        drone(moveBy(2, 0, 0, 0, _timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
 
-        media_list = drone.media.list_resources(None)
         media_list = drone.media.list_media()
         print("@" + str(media_list))
-        # print(drone.media.media_info(media_list[0]))
-        print(drone.media.media_info("AAAA_1"))
-        # print(drone.media.resource_info(media_list[0]))
-        print(drone.media.resource_info("AAAA_1"))
-        drone(download_media("AAAA_1", integrity_check=True)).wait()
-        drone(download_media("AAAB_1", integrity_check=True)).wait()
 
-        # try:
-        # except:
-        #     drone(download_media("AAAA_0000001_1.MP4", integrity_check=True))
-        #     drone(download_media(media_list[0], integrity_check=True))
-
-
-
-
-        # drone(moveBy(2, 0, 0, 0, _timeout=TIMEOUT)).wait().success()
-        # drone(Landing() >> FlyingStateChanged(state="landed", _timeout=5)).wait()
-
-
+        for media in media_list:
+            drone(download_media(media, integrity_check=True)).wait()
 
 
 
