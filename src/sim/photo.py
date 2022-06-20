@@ -77,15 +77,15 @@ def fly(drone):
 
         # Fly around and take photos
         drone(MaxTilt(30)).wait().success()
-        drone(extended_move_by(10, -30, -10, 0, 200, 200, 20,_timeout=120)).wait().success()
+        drone(extended_move_by(10, -30, -10, 0, 200, 200, 20,_timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
-        drone(extended_move_by(30, -5, -20, 0,200, 200, 20,_timeout=120)).wait().success()
+        drone(extended_move_by(30, -5, -20, 0,200, 200, 20,_timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
-        drone(extended_move_by(30, 0, -5, 0,200, 200, 20,_timeout=120)).wait().success()
+        drone(extended_move_by(30, 0, -5, 0,200, 200, 20,_timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
-        drone(extended_move_by(31, 21, 20, 0, 200, 200, 20,_timeout=120)).wait().success()
+        drone(extended_move_by(31, 21, 20, 0, 200, 200, 20,_timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
-        drone(Landing(_timeout=TIMEOUT)).wait().success()
+        drone(Landing() >> FlyingStateChanged(state="landed", _timeout=TIMEOUT)).wait()
         drone(take_photo(cam_id=0)).wait()
 
         # Download all drone media files
