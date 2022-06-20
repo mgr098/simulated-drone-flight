@@ -1,3 +1,4 @@
+from statistics import mode
 import olympe
 import os
 import time
@@ -26,9 +27,9 @@ TIMEOUT = 120
 olympe.log.update_config({"loggers": {"olympe": {"level": "INFO"}}})
 
 def main():
-
     drone = olympe.Drone(DRONE_IP, media_port=DRONE_MEDIA_PORT)
     drone.connect(retry=3)
+    drone(set_camera_mode(cam_id=0, value="photo")).wait()
     fly(drone)
     drone.disconnect()
 
@@ -49,11 +50,22 @@ def fly(drone):
             )
         ).wait()
 
-        drone(set_camera_mode(cam_id=0, value="photo")).wait()
-        drone.media.download_dir = tempfile.mkdtemp(prefix="olympe_photo_example")
+        drone(
+            set_photo_mode(
+                cam_id=0,
+                mode="single",  # any other mode might not be supported on a simulated drone
+                format="rectilinear",
+                file_format="jpeg",
+                burst="burst_14_over_1s",  # this gets ignored in "single" photo mode
+                bracketing="preset_1ev",
+                capture_interval=0.0,  # this gets ignored in "single" photo mode
+            )
+        ).wait()
 
+        drone.media.download_dir = tempfile.mkdtemp(prefix="olympe_photo_example")
         drone(photo_progress(result="photo_saved", _policy="wait"))
 
+        drone(take_photo(cam_id=0)).wait()
         drone(take_photo(cam_id=0)).wait()
 
         media_list = drone.media.list_resources(None)
@@ -63,8 +75,8 @@ def fly(drone):
         print(drone.media.media_info("AAAA_1"))
         # print(drone.media.resource_info(media_list[0]))
         print(drone.media.resource_info("AAAA_1"))
-
         drone(download_media("AAAA_1", integrity_check=True)).wait()
+        drone(download_media("AAAB_1", integrity_check=True)).wait()
 
         # try:
         # except:
@@ -93,8 +105,6 @@ def fly(drone):
         # drone(extended_move_by(31, 21, 20, 0, 200, 200, 20,_timeout=120)).wait().success()
         # print("Landing...")
         # print("Landed\n")
-
-
 
 if __name__ == "__main__":
     main()
