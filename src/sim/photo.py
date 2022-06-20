@@ -25,7 +25,7 @@ from olympe.messages.camera import (
 # Fly without stopping
 # Fly without stopping while taking photos
 # Fly while streaming, look into livestream
-# Fly and use different cameras (at the same time? while streaming?)
+# Fly and use different camera modes (at the same time? while streaming?)
 
 TIMEOUT = 120
 DRONE_IP = os.environ.get("DRONE_IP", "10.202.0.1")
@@ -40,10 +40,10 @@ def main():
     drone.disconnect()
 
 def fly(drone):
+        # Set camera mode to photo NOTE: needs to be done before takeoff for some reason
         drone(set_camera_mode(cam_id=0, value="photo")).wait()
         
-        # Takeoff, fly, land, ...
-        print("Takeoff if necessary...")
+        # Automatic takeoff
         drone(
             FlyingStateChanged(state="hovering", _policy="check")
             | FlyingStateChanged(state="flying", _policy="check")
@@ -58,6 +58,7 @@ def fly(drone):
             )
         ).wait()
 
+        # Set photo mode to single
         drone(
             set_photo_mode(
                 cam_id=0,
@@ -70,9 +71,11 @@ def fly(drone):
             )
         ).wait()
 
+        # Crete temp folder for media download
         drone.media.download_dir = tempfile.mkdtemp(prefix="olympe_photo_example")
         drone(photo_progress(result="photo_saved", _policy="wait"))
 
+        # Fly around and take photos
         drone(MaxTilt(30)).wait().success()
         drone(extended_move_by(10, -30, -10, 0, 200, 200, 20,_timeout=120)).wait().success()
         drone(take_photo(cam_id=0)).wait()
@@ -82,11 +85,11 @@ def fly(drone):
         drone(take_photo(cam_id=0)).wait()
         drone(extended_move_by(31, 21, 20, 0, 200, 200, 20,_timeout=120)).wait().success()
         drone(take_photo(cam_id=0)).wait()
-        drone(Landing()).wait().success()
+        drone(Landing(_timeout=TIMEOUT)).wait().success()
         drone(take_photo(cam_id=0)).wait()
 
+        # Download all drone media files
         media_list = drone.media.list_media()
-
         for media in media_list:
             drone(download_media(media, integrity_check=True)).wait()
 
