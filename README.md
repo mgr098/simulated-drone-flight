@@ -1,6 +1,6 @@
 # simulated-drone-flight 
 
-This project contains a script which remotely controls a simulated ANAFI drone in the Parrot Sphinx simulator using the Olympe SDK.  The script will fly the drone around and take some pictures. Once the flight is finished and the drone has landed, the script will download all media files from the drone into a temporary folder locally.
+This project contains a script which remotely controls a simulated ANAFI drone in the Parrot Sphinx simulator using the Olympe SDK.  The script will fly the drone around and take some photos. Once the flight is finished and the drone has landed, the script will download all media files from the drone into a local temporary folder.
 
 ## Prerequisites
 
@@ -27,4 +27,9 @@ After you have activated the environment you can run the script from another ter
 ```
 python3 src/main.py
 ```
-The script should connect to the simulated drone. Once the drone has flown around  and landed, the script should download all media files from the drone server at http://10.202.0.1/#/ into a local folder in your /tmp directory. The folder will have a name starting with "olympe_photo_example" containing image files.
+The script should connect to the simulated drone. Once the drone has flown around  and landed, the script should download all media files from the drone server at http://10.202.0.1/#/ into a folder in your /tmp directory. The folder will have a name starting with "olympe_photo_example" containing media files.
+
+Remember to reset Sphinx simulation between runs by running this command from another terminal.
+```
+phinx-cli action -m world fwman world_reset_all
+```
