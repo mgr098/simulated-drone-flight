@@ -1,6 +1,9 @@
-![Drone flying in simulator](/media/drone-flying.gif)
+<p align="center">
+  <img src="/media/drone-flying.gif" alt="Drone taking off in simulator"/>
+</p>
 
-# Simulated Drone Flight 
+
+# Simulated Drone Flight ✈️
 
 This project contains a script which remotely controls a simulated ANAFI drone in the Parrot Sphinx simulator using the Olympe SDK.  The script will fly the drone around and take some photos. Once the flight is finished and the drone has landed, the script will download all media files from the drone into a local temporary folder.
 
